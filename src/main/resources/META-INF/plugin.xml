@@ -1,0 +1,44 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>org.yazeez.LayeredPackage</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>LayeredPackage</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="yazeed.mohm97@gmail.com" url="https://www.yazeez.com">Yazeez</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    You can use this package to quickly create layered package, that's contains multi files (data, repo, and providers)<br>
+
+  ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+
+    </extensions>
+    <actions>
+        <!--        <action id="GenerateFilesAction" class="GenerateLayeredPackageAction" text="Generate Layered Files"-->
+        <!--                description="Generate multiple files and folders">-->
+        <!--            &lt;!&ndash;            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>&ndash;&gt;-->
+        <!--            <add-to-group group-id="NewMenu" anchor="after"/>-->
+        <!--        </action>-->
+        <action id="GenerateFilesAction" class="GenerateLayeredPackageAction" text="Generate Layered Files"
+                description="Generate layered style files and folders"
+                icon="com.intellij.icons.ExpUiIcons.ObjectBrowser.FlattenPackages">
+            <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewDir"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt l"/>
+        </action>
+    </actions>
+
+</idea-plugin>
