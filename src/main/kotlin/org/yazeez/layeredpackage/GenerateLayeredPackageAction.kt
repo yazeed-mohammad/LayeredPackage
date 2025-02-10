@@ -14,6 +14,7 @@ class GenerateLayeredPackageAction : AnAction() {
         if (dialog.showAndGet()) {
             val featureName = dialog.getFeatureName()
             val createProviderLayer = dialog.shouldCreateProviderLayer()
+            val createUILayer = dialog.shouldCreateUILayer()
 
             // Convert feature name to PascalCase for class names
             val fileName = featureName
@@ -24,7 +25,6 @@ class GenerateLayeredPackageAction : AnAction() {
                 // Create directories
                 val dataDir = baseDir.createChildDirectory(this, "data")
                 val repoDir = baseDir.createChildDirectory(this, "repo")
-//            val domainDir = baseDir.createChildDirectory(this, "domain")
 
                 // data layer
                 dataDir.createChildData(this, "base_${fileName}_data.dart").setBinaryContent(
@@ -82,6 +82,39 @@ class GenerateLayeredPackageAction : AnAction() {
                           final Base${camelCaseName}Repo _${fileName}Repo;
                           ${camelCaseName}Provider(this._${fileName}Repo);
                         
+                        }
+                        """.trimIndent().toByteArray()
+                    )
+                }
+
+                if (createUILayer) {
+                    val providerDir = baseDir.createChildDirectory(this, "ui")
+
+                    providerDir.createChildData(this, "${fileName}_page.dart").setBinaryContent(
+                        """
+                        import 'package:flutter/material.dart';
+          
+                        class ${camelCaseName}Page extends StatelessWidget {
+                          const ${camelCaseName}Page({super.key});
+                        
+                          @override
+                          Widget build(BuildContext context) {
+                            return const ${camelCaseName}Screen();
+                          }
+                        }
+                        
+                        class ${camelCaseName}Screen extends StatefulWidget {
+                          const ${camelCaseName}Screen({super.key});
+
+                          @override
+                          State<${camelCaseName}Screen> createState() => _${camelCaseName}ScreenState();
+                        }
+
+                        class _${camelCaseName}ScreenState extends State<${camelCaseName}Screen> {
+                          @override
+                          Widget build(BuildContext context) {
+                            return const Placeholder();
+                          }
                         }
                         """.trimIndent().toByteArray()
                     )
