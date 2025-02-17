@@ -63,8 +63,8 @@ class GenerateLayeredPackageAction : AnAction() {
                     import '../data/base_${fileName}_data.dart';
                     
                     class ${camelCaseName}RepoImpl implements Base${camelCaseName}Repo {
-                       final Base${camelCaseName}Data _httpClient;
-                       ${camelCaseName}RepoImpl(this._httpClient);
+                       final Base${camelCaseName}Data _${camelCaseName}Data;
+                       ${camelCaseName}RepoImpl(this._${camelCaseName}Data);
                        
                     }
                     """.trimIndent().toByteArray()
