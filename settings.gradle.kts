@@ -3,6 +3,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-}
 
+}
 rootProject.name = "LayeredPackage"

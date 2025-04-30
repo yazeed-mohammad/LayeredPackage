@@ -61,9 +61,9 @@
     <actions>
         <action id="GenerateFilesAction" class="GenerateLayeredPackageAction" text="Generate Layered Files"
                 description="Generate layered style files and folders"
-                icon="com.intellij.icons.ExpUiIcons.ObjectBrowser.FlattenPackages">
+                icon="AllIcons.ObjectBrowser.FlattenModules">
             <add-to-group group-id="NewGroup" anchor="after" relative-to-action="NewDir"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt l"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt p"/>
         </action>
     </actions>
 

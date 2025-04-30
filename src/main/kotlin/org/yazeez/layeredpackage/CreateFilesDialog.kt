@@ -1,16 +1,14 @@
 package org.yazeez.layeredpackage
 
 import com.intellij.openapi.ui.DialogWrapper
-import javax.swing.JLabel
 import java.awt.BorderLayout
-import javax.swing.JCheckBox
-import javax.swing.JComponent
-import javax.swing.JPanel
-import javax.swing.JTextField
+import javax.swing.*
 
 class CreateFilesDialog : DialogWrapper(true) {
     private val featureNameField = JTextField()
-    private val createProviderCheckBox = JCheckBox("Create Provider Layer?", true)
+    private val providerRadioButton = JRadioButton("Provider", true)
+    private val riverpodRadioButton = JRadioButton("Riverpod")
+    private val noneRadioButton = JRadioButton("None")
     private val createUICheckBox = JCheckBox("Create UI Layer?", true)
 
     init {
@@ -24,14 +22,25 @@ class CreateFilesDialog : DialogWrapper(true) {
         panel.add(JLabel("Enter the feature name:"), BorderLayout.NORTH)
         panel.add(featureNameField, BorderLayout.CENTER)
 
-        // Add checkboxes for different layers
-        val checkboxPanel = JPanel()
-        checkboxPanel.layout = BorderLayout()
-        checkboxPanel.add(createProviderCheckBox, BorderLayout.NORTH)
-        checkboxPanel.add(createUICheckBox, BorderLayout.CENTER)
+        // Create button group for provider type selection
+        val providerTypeGroup = ButtonGroup()
+        providerTypeGroup.add(providerRadioButton)
+        providerTypeGroup.add(riverpodRadioButton)
+        providerTypeGroup.add(noneRadioButton)
 
-        panel.add(checkboxPanel, BorderLayout.SOUTH)
+        // Add radio buttons for provider type selection
+        val providerTypePanel = JPanel()
+        providerTypePanel.add(JLabel("State Management:"))
+        providerTypePanel.add(providerRadioButton)
+        providerTypePanel.add(riverpodRadioButton)
+        providerTypePanel.add(noneRadioButton)
 
+        // Add components to main panel
+        val optionsPanel = JPanel(BorderLayout())
+        optionsPanel.add(providerTypePanel, BorderLayout.NORTH)
+        optionsPanel.add(createUICheckBox, BorderLayout.CENTER)
+
+        panel.add(optionsPanel, BorderLayout.SOUTH)
 
         return panel
     }
@@ -57,8 +66,12 @@ class CreateFilesDialog : DialogWrapper(true) {
             .lowercase()
     }
 
-    fun shouldCreateProviderLayer(): Boolean {
-        return createProviderCheckBox.isSelected
+    fun getSelectedStateManagementType(): StateManagementType {
+        return when {
+            providerRadioButton.isSelected -> StateManagementType.PROVIDER
+            riverpodRadioButton.isSelected -> StateManagementType.RIVERPOD
+            else -> StateManagementType.NONE
+        }
     }
 
     fun shouldCreateUILayer(): Boolean {

@@ -1,7 +1,9 @@
+import ai.grazie.utils.capitalize
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.command.WriteCommandAction
 import org.yazeez.layeredpackage.CreateFilesDialog
+import org.yazeez.layeredpackage.StateManagementType
 
 class GenerateLayeredPackageAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
@@ -13,13 +15,15 @@ class GenerateLayeredPackageAction : AnAction() {
 
         if (dialog.showAndGet()) {
             val featureName = dialog.getFeatureName()
-            val createProviderLayer = dialog.shouldCreateProviderLayer()
+            val stateManagementType: StateManagementType = dialog.getSelectedStateManagementType()
             val createUILayer = dialog.shouldCreateUILayer()
 
             // Convert feature name to PascalCase for class names
             val fileName = featureName
 //            val pascalCaseName = featureName.replaceFirstChar { it.uppercase() }
-            val camelCaseName = featureName.split('_').joinToString("", transform = String::capitalize)
+            val camelCaseName = featureName.split('_').joinToString("", transform = { it -> it.capitalize() })
+            val objectName = featureName.split('_').joinToString("", transform = { it -> it.capitalize() })
+                .replaceFirstChar { it.lowercase() }
 
             WriteCommandAction.runWriteCommandAction(project) {
                 // Create directories
@@ -63,14 +67,14 @@ class GenerateLayeredPackageAction : AnAction() {
                     import '../data/base_${fileName}_data.dart';
                     
                     class ${camelCaseName}RepoImpl implements Base${camelCaseName}Repo {
-                       final Base${camelCaseName}Data _${camelCaseName}Data;
-                       ${camelCaseName}RepoImpl(this._${camelCaseName}Data);
+                       final Base${camelCaseName}Data _${objectName}Data;
+                       ${camelCaseName}RepoImpl(this._${objectName}Data);
                        
                     }
                     """.trimIndent().toByteArray()
                 )
 
-                if (createProviderLayer) {
+                if (stateManagementType == StateManagementType.PROVIDER) {
                     val providerDir = baseDir.createChildDirectory(this, "providers")
 
                     providerDir.createChildData(this, "${fileName}_provider.dart").setBinaryContent(
@@ -79,8 +83,28 @@ class GenerateLayeredPackageAction : AnAction() {
                         import '../repo/base_${fileName}_repo.dart';
           
                         class ${camelCaseName}Provider extends ChangeNotifier {
-                          final Base${camelCaseName}Repo _${fileName}Repo;
-                          ${camelCaseName}Provider(this._${fileName}Repo);
+                          final Base${camelCaseName}Repo _${objectName}Repo;
+                          ${camelCaseName}Provider(this._${objectName}Repo);
+                        
+                        }
+                        """.trimIndent().toByteArray()
+                    )
+                } else if (stateManagementType == StateManagementType.RIVERPOD) {
+                    val providerDir = baseDir.createChildDirectory(this, "riverpods")
+
+                    providerDir.createChildData(this, "${fileName}_riverpod.dart").setBinaryContent(
+                        """
+                        import 'package:flutter_riverpod/flutter_riverpod.dart';
+                        import '../repo/base_${fileName}_repo.dart';
+                        
+                        final ${objectName}Provider = StateNotifierProvider<${camelCaseName}Provider, dynamic>(
+                          ///for better code, use Dependency injection way, such as (riverpod, get_it, ...), instead of [${camelCaseName}RepoImpl()]
+                          (ref) => ${camelCaseName}Provider(dynamic, ${camelCaseName}RepoImpl()),
+                        );
+          
+                        class ${camelCaseName}Provider extends StateNotifier<dynamic> {
+                          final Base${camelCaseName}Repo _${objectName}Repo;
+                          ${camelCaseName}Provider(this._${objectName}Repo);
                         
                         }
                         """.trimIndent().toByteArray()
@@ -99,7 +123,16 @@ class GenerateLayeredPackageAction : AnAction() {
                         
                           @override
                           Widget build(BuildContext context) {
-                            return const ${camelCaseName}Screen();
+                          ${if (stateManagementType == StateManagementType.PROVIDER) {
+                             """
+                             return ChangeNotifierProvider(
+                                create: (context) => ${camelCaseName}Provider(${camelCaseName}RepoImpl()),
+                                child: const ${camelCaseName}Screen(),
+                              );
+                            """
+                         } else {
+                             "return const ${camelCaseName}Screen();"
+                         }}
                           }
                         }
                         
