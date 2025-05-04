@@ -104,7 +104,7 @@ class GenerateLayeredPackageAction : AnAction() {
           
                         class ${camelCaseName}Provider extends StateNotifier<dynamic> {
                           final Base${camelCaseName}Repo _${objectName}Repo;
-                          ${camelCaseName}Provider(this._${objectName}Repo);
+                          ${camelCaseName}Provider(super.state, this._${objectName}Repo);
                         
                         }
                         """.trimIndent().toByteArray()

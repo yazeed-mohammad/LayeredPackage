@@ -1,21 +1,10 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-
 <idea-plugin>
-    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
     <id>org.yazeez.LayeredPackage</id>
 
-    <!-- Public plugin name should be written in Title Case.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
     <name>Layered Files Generator</name>
     <version>2025.0.1</version>
-    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="yazeed.mohm97@gmail.com">Yazeez</vendor>
 
-<!--    <product-descriptor code="PLAYEREDBUILDER" release-date="20250217" release-version="20251"/>-->
-
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description>
         <![CDATA[
         <p>🚀 <b>Effortlessly Generate Layered Architecture Files and Folders in Intellij Idea products!</b></p>
@@ -48,13 +37,37 @@
         ]]>
     </description>
 
+    <change-notes>
+        <![CDATA[
+    <h3>2.0.1</h3>
+    <ul>
+        <li><b>Fixed:</b> Resolved critical stability issues</li>
+        <li><b>Compatibility:</b> Added support for the latest version of IntelliJ</li>
+    </ul>
 
-    <!-- Product and plugin compatibility requirements.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <h3>2.0.0 - Major Updates</h3>
+    <ul>
+        <li><b>New Architecture:</b> Added full Provider pattern support</li>
+        <li><b>Riverpod Integration:</b> New Riverpod template generator</li>
+        <li><b>Smart UI Generation:</b>
+            <ul>
+                <li>Automatic Provider/Riverpod widget tree generation</li>
+                <li>State management selection during file creation</li>
+            </ul>
+        </li>
+        <li><b>Bug Fixes:</b> Resolved file path conflicts</li>
+    </ul>
+
+    <h3>1.0.0</h3>
+    <ul>
+        <li>Initial release with basic file generation</li>
+    </ul>
+    ]]>
+    </change-notes>
+
+
     <depends>com.intellij.modules.platform</depends>
 
-    <!-- Extension points defined by the plugin.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
 
     </extensions>
